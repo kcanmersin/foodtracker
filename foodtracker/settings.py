@@ -13,6 +13,13 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
+from dotenv import load_dotenv
+load_dotenv()  # Load environment variables from a .env file
+# settings.py
+
+# FatSecret API credentials
+FATSECRET_CLIENT_ID = os.getenv('FATSECRET_CLIENT_ID')
+FATSECRET_CLIENT_SECRET = os.getenv('FATSECRET_CLIENT_SECRET')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -45,6 +52,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'djoser',
     'accounts',
+    'meals',
     'social_django',
     # 'rest_framework.authtoken',
     'rest_framework_simplejwt',
