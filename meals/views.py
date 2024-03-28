@@ -7,6 +7,12 @@ import requests , os
 from requests.auth import HTTPBasicAuth
 from .models import Meal
 from .serializers import MealSerializer
+#import oauthsession
+from requests_oauthlib import OAuth1Session
+from datetime import timedelta
+#import allowany
+from rest_framework.permissions import AllowAny
+
 
 # FatSecret API credentials
 FATSECRET_CLIENT_ID = os.getenv('FATSECRET_CLIENT_ID')
@@ -88,3 +94,90 @@ class GetCategoriesAPIView(APIView):
         except requests.RequestException as e:
             print(f"Error fetching food categories: {e}")
             return Response({'error': 'Failed to fetch food categories.'}, status=status.HTTP_400_BAD_REQUEST)
+
+class FoodsSearchAPIView(APIView):
+    permission_classes =  [permissions.AllowAny]
+
+    def get_access_token(self):
+        token_url = "https://oauth.fatsecret.com/connect/token"
+        auth = (settings.FATSECRET_CLIENT_ID, settings.FATSECRET_CLIENT_SECRET)
+        data = {'grant_type': 'client_credentials'}
+        response = requests.post(token_url, auth=auth, data=data)
+        if response.status_code == 200:
+            return response.json()['access_token']
+        return None
+
+    def get(self, request, *args, **kwargs):
+        query = request.query_params.get('query')
+        if not query:
+            return Response({'error': 'Query parameter is required'}, status=400)
+
+        access_token = self.get_access_token()
+        if not access_token:
+            return Response({'error': 'Failed to obtain access token'}, status=401)
+
+        search_url = "https://platform.fatsecret.com/rest/server.api"
+        params = {
+            'method': 'foods.search',
+            'search_expression': query,
+            'format': 'json'
+        }
+        headers = {'Authorization': f'Bearer {access_token}'}
+        response = requests.get(search_url, headers=headers, params=params)
+
+        if response.status_code == 200:
+            return Response(response.json())
+        else:
+            return Response({'error': 'Failed to fetch data from FatSecret API'}, status=response.status_code)
+class FoodsSearchAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        query = request.query_params.get('query', '')
+        if not query:
+            return Response({'error': 'Query parameter is required'}, status=400)
+
+        access_token = get_access_token()
+        if not access_token:
+            return Response({'error': 'Failed to obtain access token'}, status=401)
+
+        search_url = "https://platform.fatsecret.com/rest/server.api"
+        params = {
+            'method': 'foods.search',
+            'search_expression': query,
+            'format': 'json'
+        }
+        headers = {'Authorization': f'Bearer {access_token}'}
+        response = requests.get(search_url, headers=headers, params=params)
+
+        if response.status_code == 200:
+            return Response(response.json())
+        else:
+            return Response({'error': 'Failed to fetch data from FatSecret API'}, status=response.status_code)
+
+class FoodDetailsAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, food_id):
+        access_token = get_access_token()
+        if not access_token:
+            return Response({'error': 'Could not obtain access token.'}, status=401)
+
+        # Construct the request to the FatSecret API
+        api_url = "https://platform.fatsecret.com/rest/server.api"
+        params = {
+            "method": "food.get.v4",
+            "food_id": food_id,
+            "format": "json"
+        }
+        headers = {"Authorization": f"Bearer {access_token}"}
+
+        # Make the request to the FatSecret API
+        response = requests.get(api_url, headers=headers, params=params)
+
+        if response.status_code == 200:
+            # Successful response
+            return Response(response.json())
+        else:
+            # Handle errors
+            return Response({'error': 'Failed to fetch food details from FatSecret API'}, status=response.status_code)
