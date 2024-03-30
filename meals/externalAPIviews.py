@@ -58,6 +58,7 @@ class FoodDetailsAPIView(APIView):
         except Exception as e:
             return Response({'error': str(e)}, status=400)
 class FoodSubCategoriesAPIView(APIView):
+    permission_classes = [AllowAny]
     def get(self, request, food_category_id):
         try:
             service = FatSecretService()
@@ -81,5 +82,19 @@ class FoodsSearchV3APIView(APIView):
         try:
             search_results = service.search_foods_v3(search_expression, page_number, max_results, include_sub_categories, include_food_images, include_food_attributes, flag_default_serving)
             return Response(search_results)
+        except Exception as e:
+            return Response({"error": str(e)}, status=400)
+        
+class FoodBrandsAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        starts_with = request.query_params.get('starts_with', '*')
+        brand_type = request.query_params.get('brand_type', 'manufacturer')
+        
+        service = FatSecretService()
+        try:
+            brands = service.get_all_food_brands(starts_with=starts_with, brand_type=brand_type)
+            return Response(brands)
         except Exception as e:
             return Response({"error": str(e)}, status=400)
