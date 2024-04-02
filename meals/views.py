@@ -28,7 +28,7 @@ class MealItemListCreateAPIView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         meal_id = self.kwargs.get('meal_id')
-        quantity = self.kwargs.get('quantity')
+        quantity = self.kwargs.get('type')
         multiplier = self.kwargs.get('multiplier')
         
         try:
@@ -36,7 +36,7 @@ class MealItemListCreateAPIView(generics.ListCreateAPIView):
             multiplier = float(multiplier)
         except ValueError:
             # Handle the case where conversion to float fails
-            raise ValueError("Quantity and multiplier must be convertible to float")
+            raise ValueError("Type and multiplier must be convertible to float")
 
         # Calculate the total quantity based on the quantity and multiplier
         total_quantity = quantity * multiplier

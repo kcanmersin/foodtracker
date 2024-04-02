@@ -59,7 +59,6 @@ class FatSecretService:
 
         data = response.json()
         
-        # Bu kısımda açıklamaların başlangıcında belirli ifadeler olup olmadığını kontrol etmek için bir liste belirliyoruz
         allowed_start_words = ["1 medium", "1 small", "1 oz", "100 g"]
 
         if 'food' in data and 'servings' in data['food'] and 'serving' in data['food']['servings']:
@@ -110,8 +109,9 @@ class FatSecretService:
         if not access_token:
             raise Exception("Could not obtain access token.")
 
+        # API isteği için parametrelerinizi ayarlayın
         params = {
-            "method": "foods.search.v3",  # The method is specified here as a parameter, not in the URL
+            "method": "foods.search.v3",
             "search_expression": search_expression,
             "page_number": str(page_number),
             "max_results": str(max_results),
@@ -123,33 +123,21 @@ class FatSecretService:
         }
         headers = {"Authorization": f"Bearer {access_token}"}
 
+        # API isteğini yapın
         response = requests.get(self.client.BASE_URL, headers=headers, params=params)
-
         if response.status_code != 200:
             raise Exception("Failed to search foods with v3 API. Error: " + response.text)
 
-        return response.json()
-    def search_foods(self, query):
-        access_token = self.get_access_token()
-        if not access_token:
-            return {"error": "Could not obtain access token."}
-
-        params = {
-            'method': 'foods.search',
-            'search_expression': query,
-            'format': 'json'
-        }
-        headers = {'Authorization': f'Bearer {access_token}'}
-        response = requests.get(self.client.BASE_URL, headers=headers, params=params)
-
-        if response.status_code != 200:
-            raise Exception("Failed to fetch data from FatSecret API")
-
-        # Parse the JSON response
         data = response.json()
 
-        # Filter out 'Brand' food types
-        if 'foods' in data and 'food' in data['foods']:
-            data['foods']['food'] = [food for food in data['foods']['food'] if food.get('food_type') != 'Brand']
+        if 'foods_search' in data and 'results' in data['foods_search'] and 'food' in data['foods_search']['results']:
+            food_items_with_images = []
+            for food_item in data['foods_search']['results']['food']:
+                if 'servings' in food_item:
+                    del food_item['servings']
+                if 'food_images' in food_item and 'food_image' in food_item['food_images'] and len(food_item['food_images']['food_image']) > 0:
+                    food_item['food_images']['food_image'] = food_item['food_images']['food_image'][0:1]
+                    food_items_with_images.append(food_item)
+            data['foods_search']['results']['food'] = food_items_with_images
 
         return data

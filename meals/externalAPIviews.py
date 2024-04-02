@@ -73,8 +73,8 @@ class FoodsSearchV3APIView(APIView):
         search_expression = request.query_params.get('search_expression', '')
         page_number = request.query_params.get('page_number', 0)
         max_results = request.query_params.get('max_results', 20)
-        include_sub_categories = request.query_params.get('include_sub_categories', 'false').lower() == 'true'
-        include_food_images = request.query_params.get('include_food_images', 'false').lower() == 'true'
+        include_sub_categories = request.query_params.get('include_sub_categories', 'true').lower() == 'true'
+        include_food_images = request.query_params.get('include_food_images', 'true').lower() == 'true'
         include_food_attributes = request.query_params.get('include_food_attributes', 'false').lower() == 'true'
         flag_default_serving = request.query_params.get('flag_default_serving', 'false').lower() == 'true'
 
