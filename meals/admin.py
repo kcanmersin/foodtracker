@@ -8,5 +8,4 @@ class MealAdmin(admin.ModelAdmin):
 
 @admin.register(MealItem)
 class MealItemAdmin(admin.ModelAdmin):
-    list_display = ['food_name', 'quantity_g', 'meal']
     list_filter = ['meal']

@@ -23,11 +23,13 @@ class Meal(models.Model):
         return f"{self.date} - {self.name} - {self.user.username}"
 
 class MealItem(models.Model):
+
+
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE, related_name="meal_items")
     food_name = models.CharField(max_length=255)
-    quantity_g = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)  # Gram cinsinden miktar
-    quantity_oz = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)  # Ons cinsinden miktar
-    quantity_number = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)  # Adet cinsinden miktar
+    q_type = models.CharField(max_length=10,  default='g')  # Miktar türü: gram, ons veya adet
+    quantity = models.DecimalField(max_digits=6, decimal_places=2)  # Miktar
+
     # Besin değerleri
     calories = models.DecimalField(max_digits=6, decimal_places=2)
     protein_g = models.DecimalField(max_digits=6, decimal_places=2)
@@ -47,5 +49,6 @@ class MealItem(models.Model):
     iron_mg = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.food_name} - {self.quantity_g}g"
+        return f"{self.food_name} - {self.quantity}{self.get_type_display()}"
+
 

@@ -4,13 +4,8 @@ from .models import Meal, MealItem
 class MealItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = MealItem
-        fields = [
-            'id', 'meal', 'food_name', 'quantity_g', 'quantity_oz', 'quantity_number',
-            'calories', 'protein_g', 'carbohydrates_g', 'fats_g', 'saturated_fat_g',
-            'polyunsaturated_fat_g', 'monounsaturated_fat_g', 'cholesterol_mg',
-            'sodium_mg', 'potassium_mg', 'fiber_g', 'sugar_g', 'vitamin_a_mg',
-            'vitamin_c_mg', 'calcium_mg', 'iron_mg'
-        ]
+        #all fields
+        fields = '__all__'
 
 class MealSerializer(serializers.ModelSerializer):
     meal_items = MealItemSerializer(many=True, read_only=True)
