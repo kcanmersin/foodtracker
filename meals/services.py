@@ -30,7 +30,9 @@ class FatSecretService:
 
         params = {
             "method": "food_categories.get.v2",
-            "format": "json"
+            "format": "json",
+                    "region": "TR",  # Specify the region for localization
+        "language": "tr"
         }
         headers = {"Authorization": f"Bearer {access_token}"}
         response = requests.get(self.client.BASE_URL, headers=headers, params=params)
@@ -119,7 +121,9 @@ class FatSecretService:
             "include_food_images": str(include_food_images).lower(),
             "include_food_attributes": str(include_food_attributes).lower(),
             "flag_default_serving": str(flag_default_serving).lower(),
-            "format": "json"
+            "format": "json",
+          #          "region": "TR",  # Specify the region for localization
+        #"language": "tr"
         }
         headers = {"Authorization": f"Bearer {access_token}"}
 
