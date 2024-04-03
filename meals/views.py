@@ -1,3 +1,4 @@
+import datetime
 from decimal import Decimal
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
@@ -122,3 +123,21 @@ class MealItemDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = MealItemSerializer
     permission_classes = [AllowAny]
 
+
+class UserMealsByDateAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, user_id, year, month, day):
+        date = datetime.date(year, month, day)
+        meals = Meal.objects.filter(user_id=user_id, date=date)
+        # Correctly instantiate the serializer with `instance=meals` and `many=True`
+        serializer = MealSerializer(instance=meals, many=True)
+        return Response(serializer.data)
+
+class UserMealsByMonthAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, user_id, year, month):
+        meals = Meal.objects.filter(user_id=user_id, date__year=year, date__month=month)
+        serializer = MealSerializer(instance=meals, many=True)
+        return Response(serializer.data)

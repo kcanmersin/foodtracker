@@ -2,7 +2,7 @@
 from django.urls import path
 from .externalAPIviews import FoodBrandsAPIView, FoodSubCategoriesAPIView, FoodsSearchV3APIView, NutritionInfoAPIView, CategoriesAPIView, FoodsSearchAPIView, FoodDetailsAPIView
 from . import views  # import the views module from the current package
-from .views import MealListCreateAPIView, MealDetailAPIView, MealItemCreateAPIView ,MealItemDetailAPIView ,MealItemDeleteAPIView
+from .views import MealListCreateAPIView, MealDetailAPIView, MealItemCreateAPIView ,MealItemDetailAPIView ,MealItemDeleteAPIView ,UserMealsByDateAPIView,UserMealsByMonthAPIView
 from . import externalAPIviews
 from rest_framework.views import APIView
 
@@ -32,6 +32,9 @@ urlpatterns = [
     
     path('meals/<int:meal_id>/mealitem/<int:mealitem_id>/delete/', views.MealItemDeleteAPIView.as_view(), name='mealitem-delete'),
 
+
+    path('meals/user/<int:user_id>/by-date/<int:year>/<int:month>/<int:day>/', UserMealsByDateAPIView.as_view(), name='user-meals-by-date'),
+    path('meals/user/<int:user_id>/by-month/<int:year>/<int:month>/', UserMealsByMonthAPIView.as_view(), name='user-meals-by-month'),
 
 
 ]
