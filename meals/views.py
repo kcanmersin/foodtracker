@@ -8,7 +8,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from .services import FatSecretService
-
+#import f
+from django.db.models import F
 class MealListCreateAPIView(generics.ListCreateAPIView):
     queryset = Meal.objects.all()
     serializer_class = MealSerializer
@@ -40,7 +41,7 @@ class MealItemCreateAPIView(APIView):
             multiplier = Decimal(multiplier)
             # Gıda detaylarını servisten al
             food_details = service.get_food_details(food_id)
-
+            print(food_details)
             # Gıda detaylarından ilgili serving bilgisini bul
             serving_found = False
             for serving in food_details['food']['servings']['serving']:
@@ -80,6 +81,31 @@ class MealItemCreateAPIView(APIView):
                 calcium_mg=calculate_value('calcium'),
                 iron_mg=calculate_value('iron'),
             )
+            # Update Meal nutritional totals
+            meal.total_calories = F('total_calories') + meal_item.calories
+            meal.total_protein_g = F('total_protein_g') + meal_item.protein_g
+            meal.total_carbohydrates_g = F('total_carbohydrates_g') + meal_item.carbohydrates_g
+            meal.total_fats_g = F('total_fats_g') + meal_item.fats_g
+            meal.total_saturated_fat_g = F('total_saturated_fat_g') + (meal_item.saturated_fat_g or 0)
+            meal.total_polyunsaturated_fat_g = F('total_polyunsaturated_fat_g') + (meal_item.polyunsaturated_fat_g or 0)
+            meal.total_monounsaturated_fat_g = F('total_monounsaturated_fat_g') + (meal_item.monounsaturated_fat_g or 0)
+            meal.total_cholesterol_mg = F('total_cholesterol_mg') + (meal_item.cholesterol_mg or 0)
+            meal.total_sodium_mg = F('total_sodium_mg') + (meal_item.sodium_mg or 0)
+            meal.total_potassium_mg = F('total_potassium_mg') + (meal_item.potassium_mg or 0)
+            meal.total_fiber_g = F('total_fiber_g') + (meal_item.fiber_g or 0)
+            meal.total_sugar_g = F('total_sugar_g') + (meal_item.sugar_g or 0)
+            meal.total_vitamin_a_mg = F('total_vitamin_a_mg') + (meal_item.vitamin_a_mg or 0)
+            meal.total_vitamin_c_mg = F('total_vitamin_c_mg') + (meal_item.vitamin_c_mg or 0)
+            meal.total_calcium_mg = F('total_calcium_mg') + (meal_item.calcium_mg or 0)
+            meal.total_iron_mg = F('total_iron_mg') + (meal_item.iron_mg or 0)
+
+            meal.save(update_fields=[
+                'total_calories', 'total_protein_g', 'total_carbohydrates_g', 'total_fats_g',
+                'total_saturated_fat_g', 'total_polyunsaturated_fat_g', 'total_monounsaturated_fat_g',
+                'total_cholesterol_mg', 'total_sodium_mg', 'total_potassium_mg', 'total_fiber_g',
+                'total_sugar_g', 'total_vitamin_a_mg', 'total_vitamin_c_mg', 'total_calcium_mg',
+                'total_iron_mg'
+            ])
 
             meal.save()
 
@@ -112,6 +138,10 @@ class MealItemDeleteAPIView(APIView):
         meal.total_potassium_mg = safe_subtract(meal.total_potassium_mg, meal_item.potassium_mg)
         meal.total_fiber_g = safe_subtract(meal.total_fiber_g, meal_item.fiber_g)
         meal.total_sugar_g = safe_subtract(meal.total_sugar_g, meal_item.sugar_g)
+        meal.total_vitamin_a_mg = safe_subtract(meal.total_vitamin_a_mg, meal_item.vitamin_a_mg)
+        meal.total_vitamin_c_mg = safe_subtract(meal.total_vitamin_c_mg, meal_item.vitamin_c_mg)
+        meal.total_calcium_mg = safe_subtract(meal.total_calcium_mg, meal_item.calcium_mg)
+        meal.total_iron_mg = safe_subtract(meal.total_iron_mg, meal_item.iron_mg)
 
         meal.save()
 

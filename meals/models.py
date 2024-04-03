@@ -18,7 +18,12 @@ class Meal(models.Model):
     total_potassium_mg = models.DecimalField(max_digits=8, decimal_places=2, default=0, null=True, blank=True)
     total_fiber_g = models.DecimalField(max_digits=8, decimal_places=2, default=0, null=True, blank=True)
     total_sugar_g = models.DecimalField(max_digits=8, decimal_places=2, default=0, null=True, blank=True)
+    total_vitamin_a_mg = models.DecimalField(max_digits=8, decimal_places=2, default=0, null=True, blank=True)
+    total_vitamin_c_mg = models.DecimalField(max_digits=8, decimal_places=2, default=0, null=True, blank=True)
+    total_calcium_mg = models.DecimalField(max_digits=8, decimal_places=2, default=0, null=True, blank=True)
+    total_iron_mg = models.DecimalField(max_digits=8, decimal_places=2, default=0, null=True, blank=True)
 
+    
     def __str__(self):
         return f"{self.date} - {self.name} - {self.user.username}"
 
