@@ -129,8 +129,20 @@ DATABASES = {
     }
 }
 #use default databawse    
-
-
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'defaultdb',  # This is the default database name in CockroachDB
+#         'USER': 'kkk',
+#         'PASSWORD': os.getenv('COCKROACHDB_PASSWORD'),  # Make sure this environment variable is set in your .env file
+#         'HOST': 'food-tracker-9276.7tc.aws-eu-central-1.cockroachlabs.cloud',
+#         'PORT': '26257',
+#         'OPTIONS': {
+#             'sslmode': 'verify-full',
+#             'sslrootcert': os.path.join(BASE_DIR, 'ca.crt'),  # Path to the CA certificate
+#         },
+#     }
+# }
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587

@@ -86,33 +86,37 @@ class MealItemCreateAPIView(APIView):
 
         except Exception as e:
             return Response({'error': str(e)}, status=400)
-
+def safe_subtract(current_value, subtract_value):
+    current = current_value if current_value is not None else Decimal('0.00')
+    subtract = subtract_value if subtract_value is not None else Decimal('0.00')
+    result = current - subtract
+    return max(result, Decimal('0.00'))
 class MealItemDeleteAPIView(APIView):
+
     permission_classes = [AllowAny]
 
     def delete(self, request, meal_id, mealitem_id):
         meal_item = get_object_or_404(MealItem, id=mealitem_id, meal_id=meal_id)
+        meal = get_object_or_404(Meal, id=meal_id)
         
-        # Silinecek MealItem'ın besin değerlerini al
-        calories = meal_item.calories
-        protein_g = meal_item.protein_g
-        carbohydrates_g = meal_item.carbohydrates_g
-        fats_g = meal_item.fats_g
-        # Diğer besin değerleri de benzer şekilde alınabilir
+        meal.total_calories = safe_subtract(meal.total_calories, meal_item.calories)
+        meal.total_protein_g = safe_subtract(meal.total_protein_g, meal_item.protein_g)
+        meal.total_carbohydrates_g = safe_subtract(meal.total_carbohydrates_g, meal_item.carbohydrates_g)
+        meal.total_fats_g = safe_subtract(meal.total_fats_g, meal_item.fats_g)
+        meal.total_saturated_fat_g = safe_subtract(meal.total_saturated_fat_g, meal_item.saturated_fat_g)
+        meal.total_polyunsaturated_fat_g = safe_subtract(meal.total_polyunsaturated_fat_g, meal_item.polyunsaturated_fat_g)
+        meal.total_monounsaturated_fat_g = safe_subtract(meal.total_monounsaturated_fat_g, meal_item.monounsaturated_fat_g)
+        meal.total_cholesterol_mg = safe_subtract(meal.total_cholesterol_mg, meal_item.cholesterol_mg)
+        meal.total_sodium_mg = safe_subtract(meal.total_sodium_mg, meal_item.sodium_mg)
+        meal.total_potassium_mg = safe_subtract(meal.total_potassium_mg, meal_item.potassium_mg)
+        meal.total_fiber_g = safe_subtract(meal.total_fiber_g, meal_item.fiber_g)
+        meal.total_sugar_g = safe_subtract(meal.total_sugar_g, meal_item.sugar_g)
 
-        # MealItem'ı sil
+        meal.save()
+
         meal_item.delete()
 
-        # İlgili Meal modelinde toplam besin değerlerini güncelle
-        Meal.objects.filter(id=meal_id).update(
-            total_calories=F('total_calories') - calories,
-            total_protein_g=F('total_protein_g') - protein_g,
-            total_carbohydrates_g=F('total_carbohydrates_g') - carbohydrates_g,
-            total_fats_g=F('total_fats_g') - fats_g,
-            # Diğer besin değerleri de benzer şekilde güncellenir
-        )
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'Meal item deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 class MealItemDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = MealItem.objects.all()
     serializer_class = MealItemSerializer

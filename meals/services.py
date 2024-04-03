@@ -106,7 +106,7 @@ class FatSecretService:
             raise Exception("Failed to fetch food brands.")
 
         return response.json()
-    def search_foods_v3(self, search_expression, page_number=0, max_results=20, include_sub_categories=False, include_food_images=False, include_food_attributes=False, flag_default_serving=False):
+    def search_foods_v3(self, search_expression, page_number=0, max_results=2200, include_sub_categories=False, include_food_images=False, include_food_attributes=False, flag_default_serving=False):
         access_token = self.get_access_token()
         if not access_token:
             raise Exception("Could not obtain access token.")
@@ -134,14 +134,14 @@ class FatSecretService:
 
         data = response.json()
 
-        if 'foods_search' in data and 'results' in data['foods_search'] and 'food' in data['foods_search']['results']:
-            food_items_with_images = []
-            for food_item in data['foods_search']['results']['food']:
-                if 'servings' in food_item:
-                    del food_item['servings']
-                if 'food_images' in food_item and 'food_image' in food_item['food_images'] and len(food_item['food_images']['food_image']) > 0:
-                    food_item['food_images']['food_image'] = food_item['food_images']['food_image'][0:1]
-                    food_items_with_images.append(food_item)
-            data['foods_search']['results']['food'] = food_items_with_images
+        # if 'foods_search' in data and 'results' in data['foods_search'] and 'food' in data['foods_search']['results']:
+        #     food_items_with_images = []
+        #     for food_item in data['foods_search']['results']['food']:
+        #         if 'servings' in food_item:
+        #             del food_item['servings']
+        #         if 'food_images' in food_item and 'food_image' in food_item['food_images'] and len(food_item['food_images']['food_image']) > 0:
+        #             food_item['food_images']['food_image'] = food_item['food_images']['food_image'][0:1]
+        #             food_items_with_images.append(food_item)
+        #     data['foods_search']['results']['food'] = food_items_with_images
 
         return data
