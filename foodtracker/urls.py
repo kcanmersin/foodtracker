@@ -22,4 +22,5 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),  # accounts uygulaması için
     path('meals/', include('meals.urls')),  # meals uygulaması için
     path('activation/', include('activation.urls')),  # activation uygulaması için
+    path('fitness/', include('fitness.urls')),
 ]

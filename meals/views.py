@@ -8,7 +8,6 @@ from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from .services import FatSecretService
-#import f
 from django.db.models import F
 class MealListCreateAPIView(generics.ListCreateAPIView):
     queryset = Meal.objects.all()

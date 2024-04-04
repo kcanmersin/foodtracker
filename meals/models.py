@@ -5,7 +5,6 @@ class Meal(models.Model):
     user = models.ForeignKey('accounts.UserAccount', on_delete=models.CASCADE, related_name="meals", null=True, blank=True)
     date = models.DateField(auto_now_add=True)
     name = models.CharField(max_length=255)
-    # Toplam besin değerleri
     total_calories = models.DecimalField(max_digits=8, decimal_places=2, default=0)
     total_protein_g = models.DecimalField(max_digits=8, decimal_places=2, default=0)
     total_carbohydrates_g = models.DecimalField(max_digits=8, decimal_places=2, default=0)
@@ -23,7 +22,7 @@ class Meal(models.Model):
     total_calcium_mg = models.DecimalField(max_digits=8, decimal_places=2, default=0, null=True, blank=True)
     total_iron_mg = models.DecimalField(max_digits=8, decimal_places=2, default=0, null=True, blank=True)
 
-    
+
     def __str__(self):
         return f"{self.date} - {self.name} - {self.user.username}"
 
@@ -35,7 +34,6 @@ class MealItem(models.Model):
     q_type = models.CharField(max_length=10,  default='g')  # Miktar türü: gram, ons veya adet
     quantity = models.DecimalField(max_digits=6, decimal_places=2)  # Miktar
 
-    # Besin değerleri
     calories = models.DecimalField(max_digits=6, decimal_places=2)
     protein_g = models.DecimalField(max_digits=6, decimal_places=2)
     carbohydrates_g = models.DecimalField(max_digits=6, decimal_places=2)

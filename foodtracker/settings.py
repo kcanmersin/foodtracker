@@ -21,6 +21,9 @@ load_dotenv()  # Load environment variables from a .env file
 FATSECRET_CLIENT_ID = os.getenv('FATSECRET_CLIENT_ID')
 FATSECRET_CLIENT_SECRET = os.getenv('FATSECRET_CLIENT_SECRET')
 
+# Fitness API credentials
+FITNESS_CLIENT_ID = os.getenv('FITNESS_CLIENT_ID')
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -62,6 +65,7 @@ INSTALLED_APPS = [
     'corsheaders',
     "django_filters",
     'whitenoise.runserver_nostatic', #Make sure to add this for deploy
+        'fitness',
 ]
 
 MIDDLEWARE = [

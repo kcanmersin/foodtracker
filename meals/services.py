@@ -1,6 +1,4 @@
-# services.py
 from .clients import FatSecretBaseClient
-# request 
 import requests
 class FatSecretService:
     def __init__(self):
@@ -31,7 +29,7 @@ class FatSecretService:
         params = {
             "method": "food_categories.get.v2",
             "format": "json",
-                    "region": "TR",  # Specify the region for localization
+                "region": "TR",  
         "language": "tr"
         }
         headers = {"Authorization": f"Bearer {access_token}"}
@@ -61,7 +59,7 @@ class FatSecretService:
 
         data = response.json()
         
-        allowed_start_words = ["1 medium", "1 small", "1 oz", "100 g"]
+        allowed_start_words = ["1 medium", "1 small","1 big", "1 oz", "100 g"]
 
         if 'food' in data and 'servings' in data['food'] and 'serving' in data['food']['servings']:
             data['food']['servings']['serving'] = [
