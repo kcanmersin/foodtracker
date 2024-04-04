@@ -13,8 +13,12 @@ class WgerService:
         """Retrieve detailed information about a specific exercise."""
         return self.client.make_request(f'exerciseinfo/{exercise_id}')
 
-    def search_exercises(self, search_term):
-        """Search for exercises by term."""
-        return self.client.make_request('exercise/search', params={'term': search_term})
+    def search_exercises(self, language, term):
+        """Searches for exercises based on a search term and language."""
+        params = {
+            "language": language,
+            "term": term
+        }
+        return self.client.make_request("exercise/search", params=params)
 
     # Add more methods for other endpoints you're interested in.

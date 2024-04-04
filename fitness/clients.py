@@ -1,15 +1,12 @@
-# fitness/clients.py
 import requests
 
 class WgerBaseClient:
-    BASE_URL = "https://wger.de/api/v2/"
-
     def __init__(self):
-        pass
+        self.base_url = "https://wger.de/api/v2"
+        self.headers = {"accept": "application/json"}  # Add additional headers if necessary, e.g., Authentication
 
     def make_request(self, endpoint, params=None):
-        """Make a GET request to a specific Wger API endpoint."""
-        url = f"{self.BASE_URL}{endpoint}/"
-        response = requests.get(url, params=params)
-        response.raise_for_status()
+        full_url = f"{self.base_url}/{endpoint}"
+        response = requests.get(full_url, headers=self.headers, params=params)
+        response.raise_for_status()  # This will raise an error for non-2xx responses
         return response.json()
