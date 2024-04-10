@@ -16,7 +16,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()  # Load environment variables from a .env file
 # settings.py
-
+import dj_database_url
 # FatSecret API credentials
 FATSECRET_CLIENT_ID = os.getenv('FATSECRET_CLIENT_ID')
 FATSECRET_CLIENT_SECRET = os.getenv('FATSECRET_CLIENT_SECRET')
@@ -123,30 +123,23 @@ WSGI_APPLICATION = 'foodtracker.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'cinematchdatabase.sqlite3',
-        'OPTIONS': {
-            'timeout': 20,  # Set the timeout value in seconds
-        },
-    }
-}
-#use default databawse    
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'defaultdb',  # This is the default database name in CockroachDB
-#         'USER': 'kkk',
-#         'PASSWORD': os.getenv('COCKROACHDB_PASSWORD'),  # Make sure this environment variable is set in your .env file
-#         'HOST': 'food-tracker-9276.7tc.aws-eu-central-1.cockroachlabs.cloud',
-#         'PORT': '26257',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'foodtracker.sqlite3',
 #         'OPTIONS': {
-#             'sslmode': 'verify-full',
-#             'sslrootcert': os.path.join(BASE_DIR, 'ca.crt'),  # Path to the CA certificate
+#             'timeout': 20,  # Set the timeout value in seconds
 #         },
 #     }
 # }
+
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL', 'postgres://foodtrackerv1_user:8Kp7WnxZPQ7mKR5ATkcJgJUrfsU7W5vN@dpg-cob77na1hbls73annc50-a.frankfurt-postgres.render.com/foodtrackerv1'),
+        conn_max_age=600, ssl_require=True
+    )
+}
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
