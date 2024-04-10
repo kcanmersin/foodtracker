@@ -23,4 +23,8 @@ urlpatterns = [
     path('meals/', include('meals.urls')),  # meals uygulaması için
     path('activation/', include('activation.urls')),  # activation uygulaması için
     path('fitness/', include('fitness.urls')),
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.jwt')),
+    path('auth/', include('djoser.social.urls')),
 ]
+
